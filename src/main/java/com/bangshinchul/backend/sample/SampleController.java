@@ -1,6 +1,8 @@
 package com.bangshinchul.backend.sample;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,9 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class SampleController {
-    @GetMapping("/test")
-    public String signIn() {
-        return "Login Success";
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/test-all")
+    public String testAll() {
+        return "Login Success : ADMIN & USER";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/test-admin")
+    public String testAdmin() {
+        return "Login Success : ADMIN";
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/test-user")
+    public String testUser() {
+        return "Login Success : USER";
     }
 
 }

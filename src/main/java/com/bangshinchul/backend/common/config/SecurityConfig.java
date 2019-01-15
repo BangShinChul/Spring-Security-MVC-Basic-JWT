@@ -30,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         log.debug("]-----] SecurityConfig.configure::auth {} [-----[", auth);
-//        auth.authenticationProvider(authProvider);
+        auth.authenticationProvider(authProvider);
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
     }
 
@@ -65,11 +66,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests()
                     // USER, ADMIN으로 권한 부여할 url 정의
                     .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                    .antMatchers("/", "/auth/login", "/auth/login-basic",  "/auth/login-error").permitAll()
-                    .antMatchers("/api/**").hasAnyRole("ADMIN","USER")
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/api/**").authenticated()
-                    .antMatchers("/admin/**").authenticated()
+                    .antMatchers("/", "/auth/**").permitAll()
+                    .anyRequest().authenticated()
+//                    .antMatchers("/api/**").hasAnyRole("ADMIN","USER")
+//                    .antMatchers("/admin/**").hasRole("ADMIN")
+//                    .antMatchers("/api/**").authenticated()
+//                    .antMatchers("/admin/**").authenticated()
                 .and()
 //                .httpBasic()
                 .httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthEntryPoint())
@@ -102,7 +104,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     public CustomBasicAuthenticationEntryPoint getBasicAuthEntryPoint() {
         return new CustomBasicAuthenticationEntryPoint();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

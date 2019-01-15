@@ -1,7 +1,7 @@
 # Todo List
 
 1. spring security 설정 : 19.01.13 완료
-2. basic auth 인증 형태의 spring security 구조 구현
+2. basic auth 인증 형태의 spring security 구조 구현 : 19.01.15 완료 
 3. basic auth 인증하여 JWT 토큰을 헤더로 발급해주는 구조 구현
 4. 헤더의 JWT 토큰을 확인하여 인증된 사용자인지 검사하는 구조 구현(bearer auth)
 5. 헤더의 JWT 토큰 기간이 만료되면 401 error 리턴시키는 구조 구현

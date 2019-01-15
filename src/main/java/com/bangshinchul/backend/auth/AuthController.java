@@ -26,24 +26,46 @@ public class AuthController {
     AuthRepository authRepository;
 
     @GetMapping("/login")
-    public String signIn() {
+    public String signIn(@RequestHeader HttpHeaders header) {
         log.debug("]-----] AuthController.login::call::GET[-----[");
-        return "Please login";
+        String getHeader = header.getFirst("Authorization");
+        if(getHeader != null) {
+            return "Login Success! GET : " + getHeader;
+        }else {
+            return "Please try Basic Auth Login! : GET";
+        }
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Auth request) {
+    public String login(@RequestHeader HttpHeaders header) {
         log.debug("]-----] AuthController.login::call [-----[");
 
-        String username = request.getUsername();
-        String password = request.getPassword();
+        String getHeader = header.getFirst("Authorization");
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+        // Authentication authentication = authenticationManager.authenticate(token);
+        // SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "Login Success!";
+        if(getHeader != null){
+            return "Login Success! POST : " + getHeader;
+        }else{
+            return "Please try Basic Auth Login! : POST";
+        }
     }
+
+//    @PostMapping("/login")
+//    public String login(@RequestBody Auth request) {
+//        log.debug("]-----] AuthController.login::call [-----[");
+//
+//        String username = request.getUsername();
+//        String password = request.getPassword();
+//
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+//        Authentication authentication = authenticationManager.authenticate(token);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        return "Login Success!";
+//    }
 
     @PostMapping("/login-basic")
     public String loginBasic(@AuthenticationPrincipal Auth request) {

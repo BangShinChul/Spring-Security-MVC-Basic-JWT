@@ -35,6 +35,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         log.debug("]-----]CustomAuthenticationProvider.authenticate::auth {} [-----[", auth);
 
         if (password.equals("12345")) {
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, password, auth.getAuthorities()));
             return new UsernamePasswordAuthenticationToken(username, password, auth.getAuthorities());
         } else {
             return null;
