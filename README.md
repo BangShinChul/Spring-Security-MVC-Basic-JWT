@@ -1,8 +1,8 @@
-## toy project 백엔드 (Spring boot)
+## Basic Auth와 Jwt 토큰을 이용한 Spring Security 사용자인증 프로젝트입니다.
 ---
 
-<a href="./TODOLIST.md">작업 예정 및 진행 내역</a>
-
-전체 구조는 아래와 같습니다.
-![image](https://user-images.githubusercontent.com/26675063/43045525-00881a90-8df5-11e8-80a6-6f92a264a6bc.png)
-
+1. GET /auth/login URL에서 Basic Auth 사용자인증을 진행합니다.
+2. Basic Auth 사용자인증이 성공하면 헤더를 통해 Jwt 토큰을 발급합니다.
+3. Basic Auth 사용자인증이 실패하면 403 forbidden 에러를 리턴합니다.
+4. GET /auth/login URL을 제외한 다른 모든 URL에 대해서 Jwt 토큰으로 사용자 인증을 진행합니다.
+5. 만약 Jwt 토큰이 정확하지 않거나 요청 URL에 대해서 권한이 맞지 않으면 403 forbidden 에러를 리턴합니다.
