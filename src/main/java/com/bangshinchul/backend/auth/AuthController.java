@@ -14,6 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -27,11 +30,17 @@ public class AuthController {
 
     @GetMapping("/login")
     public String signIn(@RequestHeader HttpHeaders header) {
+//    public String signIn(@RequestHeader HttpHeaders header,
+//                                      final HttpServletRequest request,
+//                                      final HttpServletResponse response) {
         log.debug("]-----] AuthController.login::call::GET[-----[");
         String getHeader = header.getFirst("Authorization");
         if(getHeader != null) {
+//            response.setStatus(HttpServletResponse.SC_OK); // 200 return
+//            response.addHeader("WWW-Authenticate", "Basic Authorization=" + getHeader + "");
             return "Login Success! GET : " + getHeader;
         }else {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 return
             return "Please try Basic Auth Login! : GET";
         }
     }

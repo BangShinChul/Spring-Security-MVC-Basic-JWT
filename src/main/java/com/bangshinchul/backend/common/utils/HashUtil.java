@@ -1,10 +1,15 @@
 package com.bangshinchul.backend.common.utils;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 public final class HashUtil {
-    private HashUtil() {
+    public HashUtil() {
     }
 
     /**

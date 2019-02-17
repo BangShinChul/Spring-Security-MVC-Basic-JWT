@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,6 +23,9 @@ public class AuthControllerTest extends BackendApplicationTests {
     @Autowired
     private WebApplicationContext wac;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private MockMvc mvc;
 
     @Before
@@ -33,7 +37,9 @@ public class AuthControllerTest extends BackendApplicationTests {
     public void loginTest() throws Exception{
         Auth request = new Auth();
         request.setUsername("admin");
-        request.setPassword("$2a$10$BujuNOQk0YCaIZ/jQj.VgO3zUsNmNqIscAIDtOcDgreQmzu4xqaYS");
+        String password = passwordEncoder.encode("12345");
+//        request.setPassword("$2a$10$BujuNOQk0YCaIZ/jQj.VgO3zUsNmNqIscAIDtOcDgreQmzu4xqaYS");
+        request.setPassword(password);
 
         ObjectMapper om = new ObjectMapper();
 
