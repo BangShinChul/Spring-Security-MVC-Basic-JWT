@@ -96,4 +96,16 @@ public class AuthController {
     public String signInError() {
         return "Login error occur!!";
     }
+
+    @GetMapping("/username-check")
+    public String usernameValidation(String username) {
+        log.info("]-----] usernameValidation CALL [-----[ : {}", username);
+
+        return "already use";
+    }
+
+    @PutMapping("/signup")
+    public String signUp() {
+        return null;
+    }
 }

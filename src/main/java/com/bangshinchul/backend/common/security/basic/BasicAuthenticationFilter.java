@@ -48,7 +48,8 @@ public class BasicAuthenticationFilter extends AbstractAuthenticationProcessingF
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException, IOException {
 
-        if (request.getHeader("Authorization").contains("Basic")) {
+        if (request.getHeader("Authorization") != null &&
+                request.getHeader("Authorization").contains("Basic")) {
 
             String token = request.getHeader("Authorization").split("Basic ")[1];
             String[] basicAuthUsernameAndPassword = new String(new Base64().decode(token.getBytes())).split(":");
@@ -71,6 +72,7 @@ public class BasicAuthenticationFilter extends AbstractAuthenticationProcessingF
                 throw new AccessDeniedException("username and password is not correct. please check your account infomation!");
             }
         } else {
+            log.debug(">>>>>>>> BASIC TOKEN IS NULL");
             throw new AccessDeniedException("is Empty Basic Token");
         }
     }

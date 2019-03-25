@@ -49,8 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     private BaseSecurityHandler securityHandler;
 
-    private static final String LOGIN_ENTRY_POINT = "/auth/**";
+    private static final String TEST_ENTRY_POINT = "/test/**";
+
+    private static final String AUTH_ENTRY_POINT = "/auth/**";
     private static final String ERROR_ENTRY_POINT = "/error/**";
+    private static final String API_ENTRY_POINT = "/api/**";
+    private static final String ADMIN_ENTRY_POINT = "/admin/**";
     private static final String ROOT_ENTRY_POINT = "/**";
     private static String REALM = "MY_TEST_REALM";
 
@@ -71,7 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests()
                     // USER, ADMIN으로 권한 부여할 url 정의
                     .antMatchers(HttpMethod.OPTIONS,ROOT_ENTRY_POINT).permitAll()
-                    .antMatchers(ROOT_ENTRY_POINT, LOGIN_ENTRY_POINT).permitAll()
+                    .antMatchers(ROOT_ENTRY_POINT, AUTH_ENTRY_POINT, TEST_ENTRY_POINT).permitAll()
+                    .antMatchers(API_ENTRY_POINT).hasAnyRole("ADMIN","USER")
+                    .antMatchers(ADMIN_ENTRY_POINT).hasRole("ADMIN")
                   .anyRequest().authenticated()
 //                    .antMatchers("/api/**").hasAnyRole("ADMIN","USER")
 //                    .antMatchers("/admin/**").hasRole("ADMIN")
@@ -101,12 +107,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 //
     @Bean
     public AntPathRequestMatcher basicAntPathRequestMatcher() {
-        return new AntPathRequestMatcher("/auth/**");
+//        return new AntPathRequestMatcher("/auth/**");
+        return new AntPathRequestMatcher("/auth/login");
     }
 //
     @Bean
     public BasicAuthenticationFilter basicAuthenticationFilter() throws Exception {
-        log.debug("]-----]SecurityConfig.basicAuthenticationFilter call[-----[");
+        log.info("]-----]SecurityConfig.basicAuthenticationFilter call[-----[");
         BasicAuthenticationFilter filter = new BasicAuthenticationFilter(basicAntPathRequestMatcher());
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(securityHandler);
@@ -118,12 +125,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public SkipPathRequestMatcher skipPathRequestMatcher() {
         // basic auth를 제외한 jwt 검사 필터를 위한 스킵 리퀘스트 매쳐
-        return new SkipPathRequestMatcher(Arrays.asList(LOGIN_ENTRY_POINT, ERROR_ENTRY_POINT));
+        return new SkipPathRequestMatcher(Arrays.asList(AUTH_ENTRY_POINT, ERROR_ENTRY_POINT, TEST_ENTRY_POINT));
+//        return new SkipPathRequestMatcher(Arrays.asList(API_ENTRY_POINT, ADMIN_ENTRY_POINT));
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        log.debug("]-----]SecurityConfig.jwtAuthenticationFilter call[-----[");
+        log.info("]-----]SecurityConfig.jwtAuthenticationFilter call[-----[");
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(skipPathRequestMatcher());
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationFailureHandler(securityHandler);

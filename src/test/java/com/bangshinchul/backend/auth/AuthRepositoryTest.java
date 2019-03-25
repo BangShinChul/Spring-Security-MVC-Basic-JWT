@@ -31,28 +31,45 @@ public class AuthRepositoryTest extends BackendApplicationTests {
     }
 
     @Test
-    public void saveTest() {
-        Auth auth = new Auth();
-        auth.setUsername("admin");
-        auth.setPassword(passwordEncoder.encode("12345"));
-        authRepository.save(auth);
-
+    public void setRole() {
         Role roleAdmin = new Role();
         roleAdmin.setRole("ADMIN");
         roleRepository.save(roleAdmin);
 
         Role roleUser = new Role();
         roleUser.setRole("USER");
-
         roleRepository.save(roleUser);
+    }
+
+    @Test
+    public void saveTest() {
+        Auth auth = new Auth();
+        auth.setUsername("admin");
+        auth.setPassword(passwordEncoder.encode("12345"));
+        authRepository.save(auth);
 
         AuthRole authRoleAdmin = new AuthRole();
-        authRoleAdmin.setRoleId(roleAdmin.getId());
+        authRoleAdmin.setRoleId(Long.valueOf(1));
         authRoleAdmin.setAuthId(auth.getId());
         authRoleRepository.save(authRoleAdmin);
 
         AuthRole authRoleUser = new AuthRole();
-        authRoleUser.setRoleId(roleUser.getId());
+        authRoleUser.setRoleId(Long.valueOf(2));
+        authRoleUser.setAuthId(auth.getId());
+        authRoleRepository.save(authRoleUser);
+    }
+
+    @Test
+    public void saveAdminTest() {
+        Auth auth = new Auth();
+        auth.setUsername("admin");
+        auth.setPassword(passwordEncoder.encode("12345"));
+        authRepository.save(auth);
+
+        Role roleAdmin = roleRepository.findByRole("ADMIN");
+
+        AuthRole authRoleUser = new AuthRole();
+        authRoleUser.setRoleId(roleAdmin.getId());
         authRoleUser.setAuthId(auth.getId());
         authRoleRepository.save(authRoleUser);
     }

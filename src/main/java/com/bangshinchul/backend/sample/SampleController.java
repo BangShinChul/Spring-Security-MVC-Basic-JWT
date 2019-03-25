@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class SampleController {
-
 //    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/test-all")

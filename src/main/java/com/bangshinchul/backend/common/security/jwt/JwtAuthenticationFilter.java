@@ -26,12 +26,16 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-        log.info(">>>>>>> JWT WWW-Authenticate check : {}", request.getHeader("Authorization"));
-        log.info(">>>>>>> JWT WWW-Authenticate check2 : {}",  request.getHeader("Authorization").contains("Bearer"));
 
-        if (!request.getHeader("Authorization").isEmpty() &&
+        String test = request.getHeader("Authorization");
+        log.info(">>>>>>> JWT WWW-Authenticate check!!! : {}", test);
+
+        if (request.getHeader("Authorization") != null &&
                 request.getHeader("Authorization").contains("Bearer")
         ) {
+            log.info(">>>>>>> JWT WWW-Authenticate check : {}", request.getHeader("Authorization"));
+            log.info(">>>>>>> JWT WWW-Authenticate check Bearer : {}",  request.getHeader("Authorization").contains("Bearer"));
+
             String token = request.getHeader("Authorization").split("Bearer ")[1];
 
             if (token.isEmpty()) { // null이면 true리턴, 아니면 false 리턴
