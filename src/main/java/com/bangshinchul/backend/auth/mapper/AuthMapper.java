@@ -9,4 +9,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 public interface AuthMapper {
     @SelectProvider(type = AuthMapperProvider.class, method = "findByUsernameAndPassword")
     Auth findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+
+    @SelectProvider(type = AuthMapperProvider.class, method = "findUsernameByUsername")
+    boolean findUsernameByUsername(@Param("username") String username);
 }

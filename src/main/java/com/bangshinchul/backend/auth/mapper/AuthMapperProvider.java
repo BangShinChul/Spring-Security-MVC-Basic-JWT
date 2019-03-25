@@ -16,4 +16,13 @@ public class AuthMapperProvider {
         StringBuilder builder = new StringBuilder(sql);
         return builder.toString();
     }
+
+    public String findUsernameByUsername(@Param("username") String username) {
+        String sql = new SQL() {{
+            SELECT("username");
+            FROM("auth");
+            WHERE("username = #{username}");
+        }}.toString();
+        return new StringBuilder(sql).toString();
+    }
 }
