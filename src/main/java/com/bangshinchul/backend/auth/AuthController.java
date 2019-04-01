@@ -1,5 +1,6 @@
 package com.bangshinchul.backend.auth;
 
+import com.bangshinchul.backend.auth.mapper.AuthMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Slf4j
 @RestController
@@ -27,6 +30,9 @@ public class AuthController {
 
     @Autowired
     AuthRepository authRepository;
+
+    @Autowired
+    AuthMapper authMapper;
 
     @GetMapping("/login")
     public String signIn(@RequestHeader HttpHeaders header) {
@@ -45,22 +51,22 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public String login(@RequestHeader HttpHeaders header) {
-        log.debug("]-----] AuthController.login::call [-----[");
-
-        String getHeader = header.getFirst("Authorization");
-
-        // UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        // Authentication authentication = authenticationManager.authenticate(token);
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        if(getHeader != null){
-            return "Login Success! POST : " + getHeader;
-        }else{
-            return "Please try Basic Auth Login! : POST";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(@RequestHeader HttpHeaders header) {
+//        log.debug("]-----] AuthController.login::call [-----[");
+//
+//        String getHeader = header.getFirst("Authorization");
+//
+//        // UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+//        // Authentication authentication = authenticationManager.authenticate(token);
+//        // SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        if(getHeader != null){
+//            return "Login Success! POST : " + getHeader;
+//        }else{
+//            return "Please try Basic Auth Login! : POST";
+//        }
+//    }
 
 //    @PostMapping("/login")
 //    public String login(@RequestBody Auth request) {
@@ -82,7 +88,7 @@ public class AuthController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    @GetMapping("db-test")
+    @GetMapping("/db-test")
     public Auth test() {
         return authRepository.findByUsername("user");
     }
@@ -100,12 +106,36 @@ public class AuthController {
     @GetMapping("/username-check")
     public String usernameValidation(String username) {
         log.info("]-----] usernameValidation CALL [-----[ : {}", username);
-
-        return "already use";
+        String result = authMapper.findUsernameByUsername(username);
+        if (!result.isEmpty()) {
+            return "already use";
+        } else {
+            return "not use";
+        }
     }
+
 
     @PutMapping("/signup")
-    public String signUp() {
+    public String signUp(@RequestHeader HttpHeaders header, @RequestBody ) {
+        log.info("]-----] signUp Basic Auth [-----[ : {} ", header.get("Authorization"));
+//        log.info("]-----] signUp Request Body [-----[ : {}", body);
+        String authorization = header.get("Authorization").get(0);
+
+        // Authorization: Basic base64credentials
+        String base64Credentials = authorization.substring("Basic".length()).trim();
+        byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+        String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+        // credentials = username:password
+        final String[] values = credentials.split(":", 2);
+        log.info(">>>>>>>>>>>> username: {} , password: {} ", values[0], values[1]);
         return null;
     }
+//
+//    @PutMapping("/signup")
+//    public String signUp(@AuthenticationPrincipal Auth request, @RequestBody Object body) {
+//        log.info("]-----] signUp Basic Auth [-----[ : {} : {}", request.getUsername(), request.getPassword());
+//        log.info("]-----] signUp Request Body [-----[ : {}", body);
+//
+//        return null;
+//    }
 }

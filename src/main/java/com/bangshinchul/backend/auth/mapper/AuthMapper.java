@@ -11,5 +11,5 @@ public interface AuthMapper {
     Auth findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
     @SelectProvider(type = AuthMapperProvider.class, method = "findUsernameByUsername")
-    boolean findUsernameByUsername(@Param("username") String username);
+    String findUsernameByUsername(@Param("username") String username);
 }

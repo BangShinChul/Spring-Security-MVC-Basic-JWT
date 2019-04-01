@@ -67,9 +67,9 @@ public class BasicAuthenticationFilter extends AbstractAuthenticationProcessingF
             }else {
                 PrintWriter writer = response.getWriter();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                writer.println("username and password is not correct. please check your account infomation!");
+                writer.println("username and password is not correct. please check your account information!");
 
-                throw new AccessDeniedException("username and password is not correct. please check your account infomation!");
+                throw new AccessDeniedException("username and password is not correct. please check your account information!");
             }
         } else {
             log.debug(">>>>>>>> BASIC TOKEN IS NULL");
