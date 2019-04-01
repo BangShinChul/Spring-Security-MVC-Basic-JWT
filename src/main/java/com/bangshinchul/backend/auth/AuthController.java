@@ -1,6 +1,7 @@
 package com.bangshinchul.backend.auth;
 
 import com.bangshinchul.backend.auth.mapper.AuthMapper;
+import com.bangshinchul.backend.auth.mapper.SignUpBodyDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -116,7 +117,7 @@ public class AuthController {
 
 
     @PutMapping("/signup")
-    public String signUp(@RequestHeader HttpHeaders header, @RequestBody ) {
+    public String signUp(@RequestHeader HttpHeaders header, @RequestBody SignUpBodyDTO dataset) {
         log.info("]-----] signUp Basic Auth [-----[ : {} ", header.get("Authorization"));
 //        log.info("]-----] signUp Request Body [-----[ : {}", body);
         String authorization = header.get("Authorization").get(0);
@@ -128,6 +129,9 @@ public class AuthController {
         // credentials = username:password
         final String[] values = credentials.split(":", 2);
         log.info(">>>>>>>>>>>> username: {} , password: {} ", values[0], values[1]);
+        log.info(">>>>>>>>>>>> email: {} , name: {} ", dataset.getEmail(), dataset.getName());
+
+
         return null;
     }
 //
